@@ -9,12 +9,12 @@ execRouter.use(bodyParser.json());
 
 execRouter.route('/')
 .post(function(req, res, next){
-	var pathFileCode;
+	var pathFileCode = '/home/pi/EliRover/code.py';
 	if (process.platform == 'win32')
-		pathFileCode = 'C:/Users/Abhijit/Software/EliRover/code.py'
-	var pathPyExe;
+		pathFileCode = 'C:/Users/Abhijit/Software/EliRover/code.py';
+	var pathPyExe = 'python';
 	if (process.platform == 'win32')
-		pathPyExe = '"C:/Program Files/Anaconda3/python.exe"'
+		pathPyExe = '"C:/Program Files/Anaconda3/python.exe"';
 	var lstCode = req.body.code.split('\n');
 	// lstCode.push('time.sleep(3)');
 	for (var i = 0; i < lstCode.length; ++i) {
