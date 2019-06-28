@@ -13,6 +13,6 @@ Blockly.Python['motion_forward'] = function(block) {
 Blockly.Python['motion_sleep'] = function(block) {
   var number_seconds = block.getFieldValue('seconds');
   // TODO: Assemble Python into code variable.
-  var code = 'time.sleep(' + number_seconds.toString() + ')';
+  var code = 'time.sleep(' + number_seconds.toString() + ')\n';
   return code;
 };
