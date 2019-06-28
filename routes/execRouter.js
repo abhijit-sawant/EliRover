@@ -60,7 +60,7 @@ execRouter.route('/')
 })
 
 var getPathFileData = function() {
-	var pathFileData;
+	var pathFileData = '/home/pi/EliRover/data.json';
 	if (process.platform == 'win32')
 		pathFileData = 'C:/Users/Abhijit/knowledge/Blockly/data.json';
 	return pathFileData;	
@@ -68,7 +68,7 @@ var getPathFileData = function() {
 
 var setProcRunning = function(pid) {
 	var procData = `{"isRunning":true, "pid": ${pid}}`;
-	fs.writeFile(getPathFileData(), procData);	
+	fs.writeFileSync(getPathFileData(), procData);	
 }
 
 var stopProc = function(callBack) {

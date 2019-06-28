@@ -89,7 +89,7 @@ Code.LANGUAGE_RTL = ['ar', 'fa', 'he', 'lki'];
  */
 Code.workspace = null;
 
-Code.host = 'http://192.168.0.14';
+Code.host = '192.168.0.14';
 
 /**
  * Extracts a parameter from the URL.
