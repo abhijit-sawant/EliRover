@@ -89,6 +89,8 @@ Code.LANGUAGE_RTL = ['ar', 'fa', 'he', 'lki'];
  */
 Code.workspace = null;
 
+Code.host = 'http://192.168.0.14';
+
 /**
  * Extracts a parameter from the URL.
  * If the parameter is absent default_value is returned.
@@ -517,7 +519,7 @@ Code.runPy = function() {
     document.getElementById('runButton').disabled = false;
     document.getElementById('stopButton').disabled = true;
   };   
-  xhr.open('POST', 'http://localhost:3000/exec');
+  xhr.open('POST', 'http://' + Code.host + ':3000/exec');
   xhr.setRequestHeader('Content-Type', 'application/json');
   document.getElementById('runButton').disabled = true;
   document.getElementById('stopButton').disabled = false;
@@ -541,7 +543,7 @@ Code.stopPy = function() {
     document.getElementById('runButton').disabled = false;
     document.getElementById('stopButton').disabled = true;    
   };
-  xhr.open('DELETE', 'http://localhost:3000/exec');
+  xhr.open('DELETE', 'http://' + Code.host + ':3000/exec');
   xhr.send();
 }
 
