@@ -83,15 +83,18 @@ var stopProc = function(callBack) {
 		var procData = JSON.parse(data);
 		if (procData.hasOwnProperty('isRunning') == true)
 		{
-			if (proc.kill(procData.pid, 0))
+			if (procData.pid !== null)
 			{
-				try 
+				if (proc.kill(procData.pid, 0))
 				{
-					proc.kill(procData.pid);
-				}
-				catch(e)
-				{
-					callBack(e);
+					try 
+					{
+						proc.kill(procData.pid);
+					}
+					catch(e)
+					{
+						callBack(e);
+					}
 				}
 			}
 			procData.isRunning = false;
