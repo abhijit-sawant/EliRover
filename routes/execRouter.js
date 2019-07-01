@@ -20,8 +20,13 @@ execRouter.route('/')
 	for (var i = 0; i < lstCode.length; ++i) {
 		lstCode[i] = '    ' + lstCode[i];
 	}	
-	var code = 'import time\ndef exec_code():\n' + lstCode.join('\n') + '\n\n';
-	code += "if __name__ == '__main__':\n    exec_code()\n\n#End of file:\n"
+	var code = 'import time\nimport elirover\n\n'
+	code += 'def exec_code():\n';
+	code += '    rover = elirover.EliRover()\n';
+	code += lstCode.join('\n') + '\n';
+	code += "if __name__ == '__main__':\n";
+	code += '    exec_code()\n\n'
+	code += '#End of file:\n'
 	fs.writeFile(pathFileCode, code, function(err) {
 		if (err)
 			return res.json({errMsg: 'Failed to write with error: ' + err}); 

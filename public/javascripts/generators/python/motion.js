@@ -6,7 +6,7 @@ goog.require('Blockly.Python');
 
 Blockly.Python['motion_forward'] = function(block) {
   // TODO: Assemble Python into code variable.
-  var code = 'forward()\n';
+  var code = 'rover.move_forward()\n';
   return code;
 };
 
