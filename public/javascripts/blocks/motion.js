@@ -23,6 +23,15 @@ Blockly.defineBlocksWithJsonArray([
 	  "helpUrl": ""
 	},
 	{
+	  "type": "motion_stop",
+	  "message0": "Stop",
+	  "previousStatement": null,
+	  "nextStatement": null,
+	  "colour": 0,
+	  "tooltip": "%{BKY_MOTION_STOP_TOOLTIP}",
+	  "helpUrl": ""
+	},	
+	{
 	  "type": "motion_sleep",
 	  "message0": "Wait %1",
 	  "colour": 0,

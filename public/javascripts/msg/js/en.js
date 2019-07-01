@@ -424,6 +424,7 @@ Blockly.Msg["PROCEDURES_DEFRETURN_TITLE"] = Blockly.Msg["PROCEDURES_DEFNORETURN_
 Blockly.Msg["TEXT_APPEND_VARIABLE"] = Blockly.Msg["VARIABLES_DEFAULT_NAME"];
 Blockly.Msg["TEXT_CREATE_JOIN_ITEM_TITLE_ITEM"] = Blockly.Msg["VARIABLES_DEFAULT_NAME"];
 Blockly.Msg["MOTION_FORWARD_TOOLTIP"] = "Move rover forward."
+Blockly.Msg["MOTION_STOP_TOOLTIP"] = "Stop rover."
 Blockly.Msg["MOTION_WAIT_TOOLTIP"] = "Wait for number of seconds provided."
 
 Blockly.Msg["MATH_HUE"] = "230";

@@ -10,6 +10,12 @@ Blockly.Python['motion_forward'] = function(block) {
   return code;
 };
 
+Blockly.Python['motion_stop'] = function(block) {
+  // TODO: Assemble Python into code variable.
+  var code = 'rover.stop()\n';
+  return code;
+};
+
 Blockly.Python['motion_sleep'] = function(block) {
   var number_seconds = block.getFieldValue('seconds');
   // TODO: Assemble Python into code variable.
