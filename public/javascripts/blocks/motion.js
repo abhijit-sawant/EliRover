@@ -23,6 +23,33 @@ Blockly.defineBlocksWithJsonArray([
 	  "helpUrl": ""
 	},
 	{
+		"type": "motion_backward",
+		"message0": "Backward",
+		"previousStatement": null,
+		"nextStatement": null,
+		"colour": 0,
+		"tooltip": "%{BKY_MOTION_BACKWARD_TOOLTIP}",
+		"helpUrl": ""
+	},	
+	{
+		"type": "motion_turn_right",
+		"message0": "Turn Right",
+		"previousStatement": null,
+		"nextStatement": null,
+		"colour": 0,
+		"tooltip": "%{BKY_MOTION_TURN_RIGHT_TOOLTIP}",
+		"helpUrl": ""
+	},	
+	{
+		"type": "motion_turn_left",
+		"message0": "Turn Left",
+		"previousStatement": null,
+		"nextStatement": null,
+		"colour": 0,
+		"tooltip": "%{BKY_MOTION_TURN_LEFT_TOOLTIP}",
+		"helpUrl": ""
+	},	
+	{
 	  "type": "motion_stop",
 	  "message0": "Stop",
 	  "previousStatement": null,
@@ -33,7 +60,7 @@ Blockly.defineBlocksWithJsonArray([
 	},	
 	{
 	  "type": "motion_sleep",
-	  "message0": "Wait %1",
+	  "message0": "Keep doing for %1 seconds",
 	  "colour": 0,
 	  "args0": [
 	    {
@@ -45,7 +72,7 @@ Blockly.defineBlocksWithJsonArray([
 	  ],
 	  "previousStatement": null,
 	  "nextStatement": null,
-	  "tooltip": "%{BKY_MOTION_WAIT_TOOLTIP}",
+	  "tooltip": "%{BKY_MOTION_SLEEP_TOOLTIP}",
 	  "helpUrl": ""
 	}  	
 ]);
