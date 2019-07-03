@@ -33,5 +33,6 @@ Blockly.Python['motion_stop'] = function(block) {
 Blockly.Python['motion_sleep'] = function(block) {
   var number_seconds = block.getFieldValue('seconds');
   var code = 'time.sleep(' + number_seconds.toString() + ')\n';
+  code += 'rover.stop()\n';
   return code;
 };
