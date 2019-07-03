@@ -24,6 +24,7 @@ execRouter.route('/')
 	code += 'def exec_code():\n';
 	code += '    rover = elirover.EliRover()\n';
 	code += lstCode.join('\n') + '\n';
+	code += '    rover.stop()\n';
 	code += "if __name__ == '__main__':\n";
 	code += '    exec_code()\n\n'
 	code += '#End of file:\n'
