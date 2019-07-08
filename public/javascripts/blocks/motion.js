@@ -67,7 +67,7 @@ Blockly.defineBlocksWithJsonArray([
 	      "type": "field_number",
 	      "name": "seconds",
 	      "value": 1,
-	      "precision": 1
+	      "precision": 0.1
 	    }
 	  ],
 	  "previousStatement": null,
