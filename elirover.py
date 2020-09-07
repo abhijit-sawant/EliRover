@@ -101,7 +101,8 @@ class EliConMotion(object):
         self.__robot.stop()
         
     def __turn(self, angle, lm, rm):
-        speed = 0.6
+        INIT_SPEED = 1
+        speed = INIT_SPEED
         self.__setSpeed(lm * speed, rm * speed)
         g = Gyro()
         while True:
@@ -110,7 +111,8 @@ class EliConMotion(object):
             if curAngle >= angle: # - 20: #substarct 20 to compensate for overshoot
                 self.__robot.stop()
                 break
-            speed = 0.7 - (1/(angle - curAngle))
+            #print('curangle %s %s' % (curAngle, speed))
+            speed = max((INIT_SPEED * ((angle - curAngle)/angle)), 0.3)
             self.__setSpeed(lm * speed, rm * speed)
             
     def turn_right(self, angle):
@@ -140,14 +142,14 @@ class EliConMotion(object):
         
         g = Gyro()
         TARGET = g.getAngles()[2]
-        print('Target %s\n' % TARGET)
+        #print('Target %s\n' % TARGET)
         
         while True:
             angle = g.getAngles()[2]
             deviation = angle - TARGET
             if deviation != 0:
                 correction = min((math.fabs(deviation) * SPEED), 1)
-                print('min ( %s, %s)' % ((math.fabs(deviation) * SPEED), 1))
+                #print('min ( %s, %s)' % ((math.fabs(deviation) * SPEED), 1))
                 if bForward is False:
                     if angle >= 0:   
                         m_right_speed = correction
@@ -158,7 +160,7 @@ class EliConMotion(object):
                         m_right_speed = correction
                     else:
                         m_left_speed = correction                    
-                print('Angle, Left, Right: %s, %s, %s\n' % (angle, m_left_speed, m_right_speed))
+                #print('Angle, Left, Right: %s, %s, %s\n' % (angle, m_left_speed, m_right_speed))
                 self.__setSpeed(m_left_speed, m_right_speed, bForward)
             time.sleep(SAMPLETIME)        
         
@@ -236,8 +238,8 @@ class EliRover(object):
 def main():
     rover = EliRover()
     try:
-        rover.move_forward()
-        time.sleep(40)
+        rover.turn_right(90)
+        #time.sleep(40)
       
     except:
         raise
