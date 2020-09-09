@@ -126,41 +126,38 @@ class EliConMotion(object):
     def move(self, bForward = True):
         self.__initAttr()
         
-        KP = 0.025
-        KD = 0.0125
-        KI = 0.00625
+        KP = 0.1
         SAMPLETIME = 0.000001
-        SPEED = 0.6
-        
-        e_left_prev_error = 0
-        e_right_prev_error = 0
-        e_left_sum_error = 0
-        e_right_sum_error = 0
+        SPEED = 0.9
+
         m_left_speed = SPEED
         m_right_speed = SPEED
         self.__setSpeed(m_left_speed, m_right_speed, bForward)
         
         g = Gyro()
         TARGET = g.getAngles()[2]
-        #print('Target %s\n' % TARGET)
-        
         while True:
             angle = g.getAngles()[2]
-            deviation = angle - TARGET
+            deviation = math.fabs(angle - TARGET)
             if deviation != 0:
-                correction = min((math.fabs(deviation) * SPEED), 1)
-                #print('min ( %s, %s)' % ((math.fabs(deviation) * SPEED), 1))
+                correction = (deviation * KP) 
                 if bForward is False:
                     if angle >= 0:   
-                        m_right_speed = correction
+                        m_right_speed += correction
+                        m_left_speed -= correction
                     else:
-                        m_left_speed = correction
+                        m_right_speed -= correction
+                        m_left_speed += correction
                 else:
                     if angle <= 0:   
-                        m_right_speed = correction
+                        m_right_speed += correction
+                        m_left_speed -= correction
                     else:
-                        m_left_speed = correction                    
-                #print('Angle, Left, Right: %s, %s, %s\n' % (angle, m_left_speed, m_right_speed))
+                        m_right_speed -= correction
+                        m_left_speed += correction                 
+                m_right_speed = min(max(m_right_speed, 0.8), 1)
+                m_left_speed = min(max(m_left_speed, 0.8), 1)
+                #print('Correction : %s, Left: %s, Right: %s\n' % (correction, m_left_speed, m_right_speed))
                 self.__setSpeed(m_left_speed, m_right_speed, bForward)
             time.sleep(SAMPLETIME)        
         
@@ -238,8 +235,12 @@ class EliRover(object):
 def main():
     rover = EliRover()
     try:
-        rover.turn_right(90)
-        #time.sleep(40)
+        rover.move_forward()
+        time.sleep(10)
+        rover.stop()
+        rover.move_backward()
+        time.sleep(10)
+        rover.stop()
       
     except:
         raise
