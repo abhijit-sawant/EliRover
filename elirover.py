@@ -8,6 +8,10 @@ import math
 import RPi.GPIO as GPIO
 
 class Gyro(object):
+    '''
+      Used following link to connect gyro and setup i2c
+      https://tutorials-raspberrypi.com/measuring-rotation-and-acceleration-raspberry-pi/
+    '''
     def __init__(self):
         self.__angle_x = 0
         self.__angle_y = 0
@@ -16,9 +20,8 @@ class Gyro(object):
         self.__power_mgmt_2 = 0x6c
         self.__previous_time = 0
         self.__current_time = time.time()
-        self.__bus = smbus.SMBus(1) # bus = smbus.SMBus(0) fuer Revision 1
+        self.__bus = smbus.SMBus(1)
         self.__address = 0x68   # via i2cdetect
-        # Aktivieren, um das Modul ansprechen zu koennen
         self.__bus.write_byte_data(self.__address, self.__power_mgmt_1, 0)        
         
     def __read_byte(self, reg):
@@ -53,27 +56,6 @@ class Gyro(object):
         return (int(self.__angle_x), int(self.__angle_y), int(self.__angle_z))       
     
 
-class Encoder(object):
-    def __init__(self, pin):
-        GPIO.setmode(GPIO.BCM)
-        self._value = 0
-        self.__pin = pin
-        GPIO.setup(self.__pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-        GPIO.add_event_detect(self.__pin, GPIO.RISING, callback=self._increment, bouncetime=23)
-        
-    def reset(self):
-        self._value = 0        
-
-    def clear(self):
-        GPIO.remove_event_detect(self.__pin)
-        
-    def _increment(self, pin):
-        self._value += 1
-                
-    @property
-    def value(self):
-        return self._value
-    
 class EliConMotion(object): 
     def __initAttr(self):
         self.__pwmLeft = OutputDevice(25)
@@ -81,8 +63,6 @@ class EliConMotion(object):
         self.__pwmLeft.on()
         self.__pwmRight.on()        
         self.__robot = Robot(left=(23, 24), right=(22, 27))        
-        self.__enLeft = Encoder(5)
-        self.__enRight = Encoder(19)
         
     def __setSpeed(self, left_speed, right_speed, bForward = True):
         mf_speed = 1
@@ -91,8 +71,6 @@ class EliConMotion(object):
         self.__robot.value = (mf_speed*left_speed, mf_speed*right_speed)
         
     def clear(self):
-        self.__enLeft.clear()
-        self.__enRight.clear()
         self.__pwmLeft.off()
         self.__pwmRight.off()        
         
@@ -101,19 +79,25 @@ class EliConMotion(object):
         self.__robot.stop()
         
     def __turn(self, angle, lm, rm):
-        INIT_SPEED = 1
+        INIT_SPEED = 1.0
+        KP = INIT_SPEED / (2.0 * angle)
+        KI = KP / 100
         speed = INIT_SPEED
         self.__setSpeed(lm * speed, rm * speed)
         g = Gyro()
+        totalDeviation = 0
         while True:
             ret = g.getAngles()
             curAngle = math.fabs(ret[2])            
             if curAngle >= angle: # - 20: #substarct 20 to compensate for overshoot
                 self.__robot.stop()
                 break
-            #print('curangle %s %s' % (curAngle, speed))
-            speed = max((INIT_SPEED * ((angle - curAngle)/angle)), 0.3)
+            print('curangle, speed %s %s' % (curAngle, speed))
+            deviation = angle - curAngle
+            speed = (KP * deviation) + (KI * totalDeviation)
+            speed = min(speed, 1.0)
             self.__setSpeed(lm * speed, rm * speed)
+            totalDeviation += deviation
             
     def turn_right(self, angle):
         self.__initAttr()
@@ -161,43 +145,6 @@ class EliConMotion(object):
                 self.__setSpeed(m_left_speed, m_right_speed, bForward)
             time.sleep(SAMPLETIME)        
         
-        
-    def move_old(self, bForward = True):
-        self.__initAttr()
-        
-        TARGET = 30
-        KP = 0.025
-        KD = 0.0125
-        KI = 0.00625
-        SAMPLETIME = 0.000001
-        
-        e_left_prev_error = 0
-        e_right_prev_error = 0
-        e_left_sum_error = 0
-        e_right_sum_error = 0
-        m_left_speed = 1
-        m_right_speed = 1
-        self.__setSpeed(m_left_speed, m_right_speed, bForward)
-        while True:             
-            e_left_error = TARGET - self.__enLeft.value
-            e_right_error = TARGET - self.__enRight.value
-            m_left_speed += (e_left_error * KP) + (e_left_prev_error * KD) + (e_left_sum_error * KI)
-            m_right_speed += (e_right_error * KP) + (e_right_prev_error * KD) + (e_right_sum_error * KI)
-            m_left_speed = max(min(1, m_left_speed), 0)
-            m_right_speed = max(min(1, m_right_speed), 0)
-            self.__setSpeed(m_left_speed, m_right_speed, bForward)
-            #print("e1 {} e2 {}".format(self.__enLeft.value, self.__enRight.value))
-            #print("e_left_error: %s e_right_error: %s" % (e_left_error, e_right_error))
-            #print("m1 {} m2 {}".format(m_left_speed, m_right_speed))
-            self.__enLeft.reset()
-            self.__enRight.reset()
-            time.sleep(SAMPLETIME)
-            e_left_prev_error = e_left_error
-            e_right_prev_error = e_right_error
-            e_left_sum_error += e_left_error
-            e_right_sum_error += e_right_error        
-        
-    
 class EliRover(object):
     def __init__(self):
         self.__process = None
@@ -235,12 +182,12 @@ class EliRover(object):
 def main():
     rover = EliRover()
     try:
-        rover.move_forward()
-        time.sleep(10)
-        rover.stop()
-        rover.move_backward()
-        time.sleep(10)
-        rover.stop()
+        rover.turn_right(90)
+        #time.sleep(5)
+        #rover.stop()
+        #rover.move_backward()
+        #time.sleep(5)
+        #rover.stop()
       
     except:
         raise
